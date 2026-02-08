@@ -101,13 +101,13 @@ export const Reservation = ({ events, onDeleteEvent }: EventCardProps) => {
   const cols = eventFields.length;
 
   return (
-    <div className='bg-white shadow flex flex-col p-4 h-full min-h-0 rounded'>
+    <div className='bg-white shadow flex flex-col p-4 gap-2 h-full min-h-0 rounded'>
       <div className='flex items-start justify-between shrink-0' >
         <h2 className='text-2xl font-semibold text-primary'>Events</h2>
       </div>
 
       {activeEvents.length > 0 && (
-        <div className='hidden md:flex bg-primary h-12 w-full p-4 rounded items-center shrink-0'>
+        <div className='hidden md:flex bg-primary w-full p-4 rounded items-center shrink-0'>
           <div
             className='grid w-full gap-4'
             style={{

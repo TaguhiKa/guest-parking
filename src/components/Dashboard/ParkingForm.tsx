@@ -125,7 +125,7 @@ export default function ParkingForm({
   }
 
   const inputBase =
-    "h-12 w-full rounded bg-neutral px-3 text-secondary outline-none placeholder:text-secondary/60";
+    "w-full rounded bg-neutral p-4 text-secondary outline-none placeholder:text-secondary/60";
 
   return (
     <div className='w-full min-w-0 px-2 sm:px-0'>
@@ -163,7 +163,7 @@ export default function ParkingForm({
                 <button
                   type='button'
                   onClick={() => openPicker(dateRef.current)}
-                  className='h-12 w-full rounded bg-neutral px-3 pr-10 text-left outline-none'
+                  className='w-full rounded bg-neutral p-4 text-left outline-none'
                 >
                   <span
                     className={date ? "text-secondary" : "text-secondary/60"}
@@ -198,7 +198,7 @@ export default function ParkingForm({
                   type='button'
                   aria-label='Select time'
                   onClick={() => setTimeOpen((v) => !v)}
-                  className='h-12 w-full rounded bg-neutral px-3 pr-10 text-left outline-none'
+                  className='w-full rounded bg-neutral p-4 text-left outline-none'
                   aria-haspopup='dialog'
                   aria-expanded={timeOpen}
                 >
@@ -259,7 +259,7 @@ export default function ParkingForm({
                       </label>
                     </div>
 
-                    <div className='mt-3 flex items-center justify-end gap-2'>
+                    <div className='flex items-center justify-end gap-2'>
                       <button
                         type='button'
                         onMouseDown={(e) => {
@@ -272,7 +272,7 @@ export default function ParkingForm({
                           setDraftStart("");
                           setDraftEnd("");
                         }}
-                        className='h-9 rounded px-3 text-sm text-secondary'
+                        className='rounded p-2 m-2 text-sm text-secondary'
                       >
                         Clear
                       </button>
@@ -291,7 +291,7 @@ export default function ParkingForm({
                           setEndTime(draftEnd);
                           setTimeOpen(false);
                         }}
-                        className='h-9 rounded bg-accent px-3 text-sm text-primary'
+                        className='rounded p-2 m-2 text-sm text-primary bg-accent '
                       >
                         Done
                       </button>
@@ -309,7 +309,7 @@ export default function ParkingForm({
                   value={lotId}
                   onChange={(e) => setLotId(e.target.value)}
                   className={[
-                    "h-12 w-full rounded bg-neutral px-3 pr-10 appearance-none outline-none",
+                    "w-full rounded bg-neutral p-4 appearance-none outline-none",
                     lotId ? "text-secondary" : "text-secondary/60",
                   ].join(" ")}
                 >
@@ -357,7 +357,7 @@ export default function ParkingForm({
               />
 
               {maxSpots > 0 && (
-                <p className='mt-1 text-xs text-secondary'>
+                <p className='mt-2 text-xs text-secondary'>
                   Maximum available spots: {maxSpots}
                 </p>
               )}
@@ -368,7 +368,7 @@ export default function ParkingForm({
 
           <button
             type='submit'
-            className='h-12 w-full rounded bg-accent text-primary outline-none'
+            className='p-4 w-full rounded bg-accent text-primary outline-none'
           >
             Reserve Parking
           </button>
