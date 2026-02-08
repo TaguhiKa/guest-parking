@@ -63,7 +63,7 @@ export const Dashboard = () => {
 
   return (
     <div className='max-w-6xl space-y-6 lg:h-[calc(100vh-2rem)] lg:min-h-0'>
-      <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:grid-rows-[auto_minmax(0,1fr)] lg:h-full lg:min-h-0'>
+      <div className='grid grid-cols-1 gap-4 lg:grid-cols-2 lg:grid-rows-[auto_minmax(0,1fr)] lg:h-full lg:min-h-0'>
         <ParkingForm onCreate={handleCreateEvent} />
         <Capacity events={events} parkingLots={parkingLots} />
 

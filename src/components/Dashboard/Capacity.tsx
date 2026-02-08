@@ -53,14 +53,14 @@ export default function Capacity({
   return (
     <div className='w-full min-w-0 px-2 sm:px-0'>
       <div className='w-full h-full max-w-none rounded-lg bg-white p-4 shadow'>
-        <div className='flex items-center justify-between gap-3'>
+        <div className='flex items-center justify-between gap-4'>
           <h1 className='text-xl sm:text-2xl font-semibold text-primary'>
             Parking Capacity
           </h1>
           {isLive && (
             <button
               type='button'
-              className='px-4 py-2 rounded-full bg-accent text-primary inline-flex items-center justify-center gap-2 select-none'
+              className='px-4 py-4 rounded-full bg-accent text-primary inline-flex items-center justify-center gap-2 select-none'
             >
               <span className='h-2 w-2 rounded-full bg-red-500 animate-pulse' />
               Live
