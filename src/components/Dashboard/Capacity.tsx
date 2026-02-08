@@ -1,0 +1,96 @@
+import { useEffect, useState } from "react";
+import { FaCarSide } from "react-icons/fa";
+import { HiUser } from "react-icons/hi";
+import Button from "../../Button";
+
+import type { ParkingEvent } from "./Dashboard";
+import type { ParkingLot } from "../../data/parkingSystem";
+import {
+  getAvailableForLot,
+  getReservedForLot,
+} from "../../data/parkingSystem";
+
+function buildLocalDate(date: string, time: string) {
+  return new Date(`${date}T${time}`);
+}
+
+function getStatus(e: ParkingEvent, now: Date) {
+  const start = buildLocalDate(e.date, e.startTime);
+  const end = buildLocalDate(e.date, e.endTime);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()))
+    return "Upcoming";
+  if (now < start) return "Upcoming";
+  if (now > end) return "Closed";
+  return "Ongoing";
+}
+
+export default function Capacity({
+  events,
+  parkingLots,
+}: {
+  events: ParkingEvent[];
+  parkingLots: ParkingLot[];
+}) {
+  const lot = parkingLots[0];
+
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const ongoingEvents = events.filter((e) => getStatus(e, now) === "Ongoing");
+  const isLive = ongoingEvents.length > 0;
+
+  const holds = ongoingEvents.map((e) => ({
+    lotId: e.lotId,
+    spots: e.spots,
+  }));
+
+  const reserved = lot ? getReservedForLot(holds, lot.id) : 0;
+  const available = lot ? getAvailableForLot(holds, lot.id) : 0;
+
+  return (
+    <div className='w-full min-w-0 px-2 sm:px-0'>
+      <div className='w-full h-full max-w-none rounded-lg bg-white p-4 shadow'>
+        <div className='flex items-center justify-between gap-3'>
+          <h1 className='text-xl sm:text-2xl font-semibold text-primary'>
+            Parking Capacity
+          </h1>
+          {isLive && (
+            <Button
+              type='button'
+              className='rounded-full text-primary cursor-default'
+            >
+              <span className='h-2 w-2 rounded-full bg-red-500 animate-pulse ' />
+              Live
+            </Button>
+          )}
+        </div>
+
+        <div className='p-4 space-y-2'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-4'>
+              <FaCarSide className='text-secondary text-xl' />
+              <span className='text-sm text-secondary'>Reserved spots</span>
+            </div>
+            <span className='text-sm font-medium text-secondary'>
+              {reserved}
+            </span>
+          </div>
+
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-4'>
+              <HiUser className='text-secondary text-xl' />
+              <span className='text-sm text-secondary'>Available spots</span>
+            </div>
+            <span className='text-sm font-medium text-secondary'>
+              {available}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

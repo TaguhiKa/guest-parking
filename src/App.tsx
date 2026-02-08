@@ -1,35 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Sidebar } from "./components/Sidebar/Sidebar";
+import { Dashboard } from "./components/Dashboard/Dashboard";
 
-function App() {
-  const [count, setCount] = useState(0)
+import "./index.css";
 
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <main className='grid h-screen p-4 gap-4 grid-cols-[56px_1fr] md:grid-cols-[220px_1fr]'>
+      <Sidebar />
+      <section className='overflow-y-auto min-w-0'>
+        <Dashboard />
+      </section>
+    </main>
+  );
 }
-
-export default App
