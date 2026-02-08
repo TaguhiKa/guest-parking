@@ -3,7 +3,6 @@ import { FaRegCalendar } from "react-icons/fa";
 import { FiClock } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 
-import Button from "../../Button";
 import { parkingLots } from "../../data/parkingSystem";
 import type { ParkingEvent } from "./Dashboard";
 
@@ -20,6 +19,9 @@ export default function ParkingForm({
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+
+  const [draftStart, setDraftStart] = useState("");
+  const [draftEnd, setDraftEnd] = useState("");
 
   const [spots, setSpots] = useState<number | "">("");
   const [zone, setZone] = useState("");
@@ -43,6 +45,13 @@ export default function ParkingForm({
     document.addEventListener("mousedown", onDocMouseDown);
     return () => document.removeEventListener("mousedown", onDocMouseDown);
   }, []);
+
+  useEffect(() => {
+    if (timeOpen) {
+      setDraftStart(startTime);
+      setDraftEnd(endTime);
+    }
+  }, [timeOpen]);
 
   function openPicker(input: HTMLInputElement | null) {
     if (!input) return;
@@ -107,6 +116,8 @@ export default function ParkingForm({
     setDate("");
     setStartTime("");
     setEndTime("");
+    setDraftStart("");
+    setDraftEnd("");
     setSpots("");
     setZone("");
     setLotId("");
@@ -122,6 +133,7 @@ export default function ParkingForm({
         <h1 className='text-xl sm:text-2xl font-semibold text-primary'>
           Reserve Guest Parking
         </h1>
+
         <form className='p-4 space-y-4' onSubmit={handleSubmit}>
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
             <Field label='Name'>
@@ -144,6 +156,7 @@ export default function ParkingForm({
               />
             </Field>
           </div>
+
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             <Field label='Date'>
               <div className='relative'>
@@ -178,6 +191,7 @@ export default function ParkingForm({
                 </IconButton>
               </div>
             </Field>
+
             <Field label='Time'>
               <div className='relative' ref={timeWrapRef}>
                 <button
@@ -198,6 +212,7 @@ export default function ParkingForm({
                     {formatRange(startTime, endTime)}
                   </span>
                 </button>
+
                 <IconButton
                   title='Pick time range'
                   className='right-2'
@@ -205,25 +220,29 @@ export default function ParkingForm({
                 >
                   <FiClock />
                 </IconButton>
+
                 {timeOpen && (
-                  <div className='absolute z-20 mt-2 w-full rounded bg-white p-2 shadow'>
+                  <div
+                    className='absolute z-20 mt-2 w-full rounded bg-white p-2 shadow'
+                    onMouseDown={(e) => e.stopPropagation()}
+                  >
                     <div className='grid grid-cols-2 gap-3'>
                       <label className='text-xs text-primary'>
                         <span className='mb-1 block font-medium'>Start</span>
                         <input
                           type='time'
-                          value={startTime}
+                          value={draftStart}
                           onChange={(e) => {
                             const nextStart = e.target.value;
                             const { nextStart: s, nextEnd: en } =
-                              ensureValidRange(nextStart, endTime);
-                            setStartTime(s);
-                            setEndTime(en);
+                              ensureValidRange(nextStart, draftEnd);
+                            setDraftStart(s);
+                            setDraftEnd(en);
                             if (en === "" && endTimeRef.current) {
                               openPicker(endTimeRef.current);
                             }
                           }}
-                          className='h-10 w-full rounded bg-neutral p-2 text-secondary outline-none'
+                          className='h-12 w-full rounded bg-neutral p-2 text-secondary outline-none'
                         />
                       </label>
 
@@ -232,10 +251,10 @@ export default function ParkingForm({
                         <input
                           ref={endTimeRef}
                           type='time'
-                          value={endTime}
-                          min={startTime || undefined}
-                          onChange={(e) => setEndTime(e.target.value)}
-                          className='h-10 w-full rounded bg-neutral px-2 text-secondary outline-none'
+                          value={draftEnd}
+                          min={draftStart || undefined}
+                          onChange={(e) => setDraftEnd(e.target.value)}
+                          className='h-12 w-full rounded bg-neutral px-2 text-secondary outline-none'
                         />
                       </label>
                     </div>
@@ -243,17 +262,35 @@ export default function ParkingForm({
                     <div className='mt-3 flex items-center justify-end gap-2'>
                       <button
                         type='button'
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setDraftStart("");
+                          setDraftEnd("");
+                        }}
                         onClick={() => {
-                          setStartTime("");
-                          setEndTime("");
+                          setDraftStart("");
+                          setDraftEnd("");
                         }}
                         className='h-9 rounded px-3 text-sm text-secondary'
                       >
                         Clear
                       </button>
+
                       <button
                         type='button'
-                        onClick={() => setTimeOpen(false)}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setStartTime(draftStart);
+                          setEndTime(draftEnd);
+                          setTimeOpen(false);
+                        }}
+                        onClick={() => {
+                          setStartTime(draftStart);
+                          setEndTime(draftEnd);
+                          setTimeOpen(false);
+                        }}
                         className='h-9 rounded bg-accent px-3 text-sm text-primary'
                       >
                         Done
@@ -264,6 +301,7 @@ export default function ParkingForm({
               </div>
             </Field>
           </div>
+
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             <Field label='Parking Lot'>
               <div className='relative'>
@@ -328,11 +366,12 @@ export default function ParkingForm({
 
           {error && <p className='text-sm text-red-600'>{error}</p>}
 
-          <div className='pt-2'>
-            <Button type='submit' className='w-full h-12'>
-              Reserve Parking
-            </Button>
-          </div>
+          <button
+            type='submit'
+            className='h-12 w-full rounded bg-accent text-primary outline-none'
+          >
+            Reserve Parking
+          </button>
         </form>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaCarSide } from "react-icons/fa";
 import { HiUser } from "react-icons/hi";
-import Button from "../../Button";
 
 import type { ParkingEvent } from "./Dashboard";
 import type { ParkingLot } from "../../data/parkingSystem";
@@ -59,13 +58,13 @@ export default function Capacity({
             Parking Capacity
           </h1>
           {isLive && (
-            <Button
+            <button
               type='button'
-              className='rounded-full text-primary cursor-default'
+              className='px-4 py-2 rounded-full bg-accent text-primary inline-flex items-center justify-center gap-2 select-none'
             >
-              <span className='h-2 w-2 rounded-full bg-red-500 animate-pulse ' />
+              <span className='h-2 w-2 rounded-full bg-red-500 animate-pulse' />
               Live
-            </Button>
+            </button>
           )}
         </div>
 

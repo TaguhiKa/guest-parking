@@ -1,9 +1,16 @@
+import React from "react";
 import type { ParkingEvent } from "./Dashboard";
 import type { ParkingLot } from "../../data/parkingSystem";
+
+type EventField = {
+  label: string;
+  render: (event: ParkingEvent) => React.ReactNode;
+};
 
 type EventCardProps = {
   events: ParkingEvent[];
   parkingLots: ParkingLot[];
+  onDeleteEvent: (id: string) => void;
 };
 
 function formatDate(isoDate: string) {
@@ -33,72 +40,113 @@ function getStatus(e: ParkingEvent): EventStatus {
 }
 
 function StatusBadge({ status }: { status: EventStatus }) {
-  return <span className="text-secondary">{status}</span>;
+  return <span className='text-secondary'>{status}</span>;
 }
 
-export const Reservation = ({ events }: EventCardProps) => {
+const buildEventFields = (
+  onDeleteEvent: (id: string) => void,
+): EventField[] => [
+  {
+    label: "Event Name",
+    render: (e) => <p className='truncate md:col-auto col-span-1'>{e.name}</p>,
+  },
+  {
+    label: "Date & Time",
+    render: (e) => (
+      <p className='truncate'>
+        {formatDate(e.date)} · {e.startTime} - {e.endTime}
+      </p>
+    ),
+  },
+  {
+    label: "Capacity",
+    render: (e) => <p>{e.spots}</p>,
+  },
+  {
+    label: "Status",
+    render: (e) => (
+      <div className='flex md:justify-start'>
+        <StatusBadge status={getStatus(e)} />
+      </div>
+    ),
+  },
+  {
+    label: "Actions",
+    render: (e) => (
+      <button
+        onClick={() => {
+          if (confirm("Are you sure you want to delete this event?")) {
+            onDeleteEvent(e.id);
+          }
+        }}
+        className='flex md:justify-start text-red-600'
+        type='button'
+      >
+        Delete
+      </button>
+    ),
+  },
+];
+
+export const Reservation = ({ events, onDeleteEvent }: EventCardProps) => {
   const activeEvents = events.filter((e) => getStatus(e) !== "Closed");
+  const eventFields = buildEventFields(onDeleteEvent);
+  const cols = eventFields.length;
 
   return (
-    <div className="bg-white shadow flex flex-col justify-between p-4 h-full rounded">
-      <div className="flex flex-col gap-4">
-        <div className="flex items-start justify-between gap-3">
-          <h2 className="text-2xl font-semibold text-primary">Events</h2>
-        </div>
+    <div className='bg-white shadow flex flex-col p-4 h-full min-h-0 rounded'>
+      <div className='flex items-start justify-between gap-3 shrink-0'>
+        <h2 className='text-2xl font-semibold text-primary'>Events</h2>
+      </div>
 
-        <div className="hidden md:flex bg-primary h-12 w-full px-4 rounded items-center">
-          <div className="grid w-full grid-cols-4 gap-4">
-            <p className="text-white font-medium">Event Name</p>
-            <p className="text-white font-medium">Date &amp; Time</p>
-            <p className="text-white font-medium">Capacity</p>
-            <p className="text-white font-medium">Status</p>
+      {/* ✅ Only show the column header row when we actually have events */}
+      {activeEvents.length > 0 && (
+        <div className='hidden md:flex bg-primary h-12 w-full px-4 rounded items-center shrink-0 mt-4'>
+          {/* ✅ Avoid dynamic Tailwind classes like grid-cols-${n} */}
+          <div
+            className='grid w-full gap-4'
+            style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+          >
+            {eventFields.map(({ label }) => (
+              <p key={label} className='text-white font-medium'>
+                {label}
+              </p>
+            ))}
           </div>
         </div>
+      )}
 
-        <div className="flex flex-col gap-4">
-          {activeEvents.length === 0 ? (
-            <div className="flex items-center w-full rounded border border-neutral p-4 text-[#666666]">
-              No events yet.
-            </div>
-          ) : (
-            activeEvents.map((e) => {
-              const status = getStatus(e);
-
-              return (
+      <div className='flex-1 min-h-0 overflow-y-auto mt-4 pr-2'>
+        {activeEvents.length === 0 ? (
+          <div className='flex items-center w-full rounded border border-neutral p-4 text-[#666666]'>
+            No events yet.
+          </div>
+        ) : (
+          <div className='flex flex-col gap-4'>
+            {activeEvents.map((e) => (
+              <div
+                key={e.id}
+                className='w-full rounded border border-neutral text-secondary p-4'
+              >
                 <div
-                  key={e.id}
-                  className="w-full rounded border border-neutral text-secondary p-4"
+                  className='grid grid-cols-2 gap-x-4 gap-y-3 md:items-center'
+                  style={{
+                    gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+                  }}
                 >
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-4 md:items-center">
-                    <p className="text-xs font-semibold text-primary md:hidden">
-                      Event Name
-                    </p>
-                    <p className="truncate md:col-auto col-span-1">{e.name}</p>
-
-                    <p className="text-xs font-semibold text-primary md:hidden">
-                      Date &amp; Time
-                    </p>
-                    <p className="truncate">
-                      {formatDate(e.date)} · {e.startTime} - {e.endTime}
-                    </p>
-
-                    <p className="text-xs font-semibold text-primary md:hidden">
-                      Capacity
-                    </p>
-                    <p>{e.spots}</p>
-
-                    <p className="text-xs font-semibold text-primary md:hidden">
-                      Status
-                    </p>
-                    <div className="flex md:justify-start">
-                      <StatusBadge status={status} />
+                  {eventFields.map(({ label, render }) => (
+                    <div key={label} className='contents'>
+                      <p className='text-xs font-semibold text-primary md:hidden'>
+                        {label}
+                      </p>
+                      {render(e)}
                     </div>
-                  </div>
+                  ))}
                 </div>
-              );
-            })
-          )}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
