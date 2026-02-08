@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaCarSide } from "react-icons/fa";
-import { HiUser } from "react-icons/hi";
+import { MdLocalParking, MdLock } from 'react-icons/md'
 
 import type { ParkingEvent } from "./Dashboard";
 import type { ParkingLot } from "../../data/parkingSystem";
@@ -71,7 +70,7 @@ export default function Capacity({
         <div className='grid grid-cols-1 gap-4 py-2'>
           <div className='w-full rounded border border-neutral text-secondary p-4 flex items-center justify-between'>
             <div className='flex items-center gap-4 text-secondary'>
-              <FaCarSide/>
+              <MdLock />
               <span>Reserved spots</span>
             </div>
             <span>
@@ -80,7 +79,7 @@ export default function Capacity({
           </div>
           <div className='w-full rounded border border-neutral text-secondary p-4 flex items-center justify-between'>
             <div className='flex items-center gap-4 text-secondary'>
-              <HiUser />
+              <MdLocalParking />
               <span>Available spots</span>
             </div>
             <span>
