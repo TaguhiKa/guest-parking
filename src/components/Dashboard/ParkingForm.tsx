@@ -134,7 +134,7 @@ export default function ParkingForm({
           Reserve Guest Parking
         </h1>
 
-        <form className='p-4 space-y-4' onSubmit={handleSubmit}>
+        <form className="py-4 space-y-4" onSubmit={handleSubmit}>
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
             <Field label='Name'>
               <input

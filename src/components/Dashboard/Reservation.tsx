@@ -94,15 +94,12 @@ export const Reservation = ({ events, onDeleteEvent }: EventCardProps) => {
   const cols = eventFields.length;
 
   return (
-    <div className='bg-white shadow flex flex-col p-4 h-full min-h-0 rounded'>
-      <div className='flex items-start justify-between gap-3 shrink-0'>
+    <div className='bg-white shadow flex flex-col p-4 gap-4 h-full min-h-0 rounded'>
+      <div className='flex items-start justify-between shrink-0'>
         <h2 className='text-2xl font-semibold text-primary'>Events</h2>
       </div>
-
-      {/* ✅ Only show the column header row when we actually have events */}
       {activeEvents.length > 0 && (
-        <div className='hidden md:flex bg-primary h-12 w-full px-4 rounded items-center shrink-0 mt-4'>
-          {/* ✅ Avoid dynamic Tailwind classes like grid-cols-${n} */}
+        <div className='hidden md:flex bg-primary h-12 w-full px-4 rounded items-center shrink-0'>
           <div
             className='grid w-full gap-4'
             style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
@@ -116,9 +113,9 @@ export const Reservation = ({ events, onDeleteEvent }: EventCardProps) => {
         </div>
       )}
 
-      <div className='flex-1 min-h-0 overflow-y-auto mt-4 pr-2'>
+      <div className='flex-1 min-h-0 overflow-y-auto py-2'>
         {activeEvents.length === 0 ? (
-          <div className='flex items-center w-full rounded border border-neutral p-4 text-[#666666]'>
+          <div className='flex items-center w-full rounded border border-neutral p-4 text-secondary'>
             No events yet.
           </div>
         ) : (

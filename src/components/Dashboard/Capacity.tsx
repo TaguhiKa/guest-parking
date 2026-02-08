@@ -68,23 +68,22 @@ export default function Capacity({
           )}
         </div>
 
-        <div className='p-4 space-y-2'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-4'>
-              <FaCarSide className='text-secondary text-xl' />
-              <span className='text-sm text-secondary'>Reserved spots</span>
+        <div className='grid grid-cols-1 gap-4 py-2'>
+          <div className='w-full rounded border border-neutral text-secondary p-4 flex items-center justify-between'>
+            <div className='flex items-center gap-4 text-secondary'>
+              <FaCarSide/>
+              <span>Reserved spots</span>
             </div>
-            <span className='text-sm font-medium text-secondary'>
+            <span>
               {reserved}
             </span>
           </div>
-
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-4'>
-              <HiUser className='text-secondary text-xl' />
-              <span className='text-sm text-secondary'>Available spots</span>
+          <div className='w-full rounded border border-neutral text-secondary p-4 flex items-center justify-between'>
+            <div className='flex items-center gap-4 text-secondary'>
+              <HiUser />
+              <span>Available spots</span>
             </div>
-            <span className='text-sm font-medium text-secondary'>
+            <span>
               {available}
             </span>
           </div>
